@@ -1,41 +1,157 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
-# dependencies
-node_modules/
-
 # Expo
 .expo/
 dist/
 web-build/
-expo-env.d.ts
+.expo-shared/
 
 # Native
-.kotlin/
 *.orig.*
 *.jks
 *.p8
 *.p12
 *.key
 *.mobileprovision
+*.ipa
+*.apk
 
 # Metro
 .metro-health-check*
 
-# debug
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# TypeScript
+*.tsbuildinfo
+*.d.ts.map
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+
+# Debugging
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build artifacts
+*.log
+*.tgz
+*.tar.gz
+
+# EAS
+eas.json
+.easignore
+
+# SQLite databases (development)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# OS
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
 
 # macOS
-.DS_Store
-*.pem
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
 
-# local env files
-.env*.local
+# Windows
+Desktop.ini
+ehthumbs.db
+ehthumbs_vista.db
 
-# typescript
-*.tsbuildinfo
+# Linux
+.directory
+.Trash-*
 
-# generated native folders
-/ios
-/android
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*.cache
+
+# IDE
+*.sublime-project
+*.sublime-workspace
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+
+# React Native
+# Gradle (Android)
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+android/*.iml
+
+# Xcode (iOS)
+ios/Pods/
+ios/build/
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcodeproj/xcuserdata/
+ios/*.xcodeproj/project.xcworkspace/xcuserdata/
+ios/Podfile.lock
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Bundle artifacts
+*.jsbundle
+
+# CocoaPods (iOS)
+ios/Pods/
+Pods/
+
+# Backup files
+*.backup
+*-backup
+*.old
+
+# Generated files
+generated/
+*.generated.*
+
+# Sentry
+.sentryclirc
+
+# Firebase
+google-services.json
+GoogleService-Info.plist
+
+# Custom
+# Add any project-specific ignores below
