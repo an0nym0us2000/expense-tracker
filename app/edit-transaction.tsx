@@ -20,7 +20,7 @@ import { spacing, radius, shadows } from '../src/theme/spacing';
 import { fontFamily, fontSize } from '../src/theme/typography';
 import { getToday } from '../src/utils';
 import type { Category, PaymentMethod, TransactionType, TransactionWithCategory } from '../src/types';
-import { DatePicker } from '../src/components/ui';
+import { DatePickerField as DatePicker } from '../src/components/ui';
 
 export default function EditTransactionScreen() {
     const insets = useSafeAreaInsets();

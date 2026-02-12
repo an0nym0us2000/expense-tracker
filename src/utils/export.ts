@@ -1,4 +1,5 @@
-import * as FileSystem from 'expo-file-system';
+import { Paths, File } from 'expo-file-system';
+import { EncodingType } from 'expo-file-system/build/ExpoFileSystem.types';
 import * as Sharing from 'expo-sharing';
 import { transactionRepo } from '../database';
 import type { TransactionWithCategory } from '../types';
@@ -43,17 +44,15 @@ export const exportTransactionsToCSV = async (): Promise<void> => {
         // Create filename with timestamp
         const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
         const fileName = `transactions_${timestamp}.csv`;
-        const fileUri = `${FileSystem.documentDirectory}${fileName}`;
+        const file = new File(Paths.document, fileName);
 
         // Write to file
-        await FileSystem.writeAsStringAsync(fileUri, csvContent, {
-            encoding: FileSystem.EncodingType.UTF8,
-        });
+        await file.write(csvContent);
 
         // Share the file
         const canShare = await Sharing.isAvailableAsync();
         if (canShare) {
-            await Sharing.shareAsync(fileUri, {
+            await Sharing.shareAsync(file.uri, {
                 mimeType: 'text/csv',
                 dialogTitle: 'Export Transactions',
                 UTI: 'public.comma-separated-values-text',
@@ -63,7 +62,7 @@ export const exportTransactionsToCSV = async (): Promise<void> => {
         }
 
         // Clean up the file after sharing
-        await FileSystem.deleteAsync(fileUri, { idempotent: true });
+        await file.delete();
     } catch (error) {
         console.error('Error exporting to CSV:', error);
         throw error;
@@ -85,17 +84,14 @@ export const exportTransactionsByDateRange = async (
         }
 
         const csvContent = transactionsToCSV(transactions);
-        const timestamp = new Date().toISOString().split('T')[0];
         const fileName = `transactions_${startDate}_to_${endDate}.csv`;
-        const fileUri = `${FileSystem.documentDirectory}${fileName}`;
+        const file = new File(Paths.document, fileName);
 
-        await FileSystem.writeAsStringAsync(fileUri, csvContent, {
-            encoding: FileSystem.EncodingType.UTF8,
-        });
+        await file.write(csvContent);
 
         const canShare = await Sharing.isAvailableAsync();
         if (canShare) {
-            await Sharing.shareAsync(fileUri, {
+            await Sharing.shareAsync(file.uri, {
                 mimeType: 'text/csv',
                 dialogTitle: 'Export Transactions',
             });
@@ -103,7 +99,7 @@ export const exportTransactionsByDateRange = async (
             throw new Error('Sharing is not available on this device');
         }
 
-        await FileSystem.deleteAsync(fileUri, { idempotent: true });
+        await file.delete();
     } catch (error) {
         console.error('Error exporting date range:', error);
         throw error;

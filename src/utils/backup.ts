@@ -1,4 +1,4 @@
-import * as FileSystem from 'expo-file-system';
+import { Paths, File } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -54,17 +54,15 @@ export const createBackup = async (): Promise<void> => {
         // Create filename with timestamp
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('T')[0];
         const fileName = `sprout_backup_${timestamp}.json`;
-        const fileUri = `${FileSystem.documentDirectory}${fileName}`;
+        const file = new File(Paths.document, fileName);
 
         // Write to file
-        await FileSystem.writeAsStringAsync(fileUri, jsonContent, {
-            encoding: FileSystem.EncodingType.UTF8,
-        });
+        await file.write(jsonContent);
 
         // Share the backup file
         const canShare = await Sharing.isAvailableAsync();
         if (canShare) {
-            await Sharing.shareAsync(fileUri, {
+            await Sharing.shareAsync(file.uri, {
                 mimeType: 'application/json',
                 dialogTitle: 'Save Backup',
                 UTI: 'public.json',
@@ -74,7 +72,7 @@ export const createBackup = async (): Promise<void> => {
         }
 
         // Clean up after sharing
-        await FileSystem.deleteAsync(fileUri, { idempotent: true });
+        await file.delete();
     } catch (error) {
         console.error('Error creating backup:', error);
         throw error;
@@ -96,10 +94,11 @@ export const restoreFromBackup = async (): Promise<void> => {
             throw new Error('No file selected');
         }
 
-        const fileUri = result.assets[0].uri;
+        const pickedFileUri = result.assets[0].uri;
 
         // Read the backup file
-        const fileContent = await FileSystem.readAsStringAsync(fileUri);
+        const pickedFile = new File(pickedFileUri);
+        const fileContent = await pickedFile.text();
         const backupData: BackupData = JSON.parse(fileContent);
 
         // Validate backup version
@@ -170,7 +169,8 @@ export const restoreFromBackup = async (): Promise<void> => {
  */
 export const getBackupInfo = async (fileUri: string): Promise<BackupData> => {
     try {
-        const fileContent = await FileSystem.readAsStringAsync(fileUri);
+        const file = new File(fileUri);
+        const fileContent = await file.text();
         const backupData: BackupData = JSON.parse(fileContent);
         return backupData;
     } catch (error) {

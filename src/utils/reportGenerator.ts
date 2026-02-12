@@ -1,4 +1,4 @@
-import * as FileSystem from 'expo-file-system';
+import { Paths, File } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import type { TransactionWithCategory, CategoryBreakdown } from '../types';
 import { formatCurrency } from './currency';
@@ -309,15 +309,13 @@ export async function exportMonthlyReport(
     try {
         const html = generateHTMLReport(reportData, currency);
         const fileName = `monthly_report_${reportData.year}_${reportData.month.padStart(2, '0')}.html`;
-        const fileUri = `${FileSystem.documentDirectory}${fileName}`;
+        const file = new File(Paths.document, fileName);
 
-        await FileSystem.writeAsStringAsync(fileUri, html, {
-            encoding: FileSystem.EncodingType.UTF8,
-        });
+        await file.write(html);
 
         const canShare = await Sharing.isAvailableAsync();
         if (canShare) {
-            await Sharing.shareAsync(fileUri, {
+            await Sharing.shareAsync(file.uri, {
                 mimeType: 'text/html',
                 dialogTitle: 'Share Monthly Report',
                 UTI: 'public.html',
@@ -327,7 +325,7 @@ export async function exportMonthlyReport(
         }
 
         // Clean up after sharing
-        await FileSystem.deleteAsync(fileUri, { idempotent: true });
+        await file.delete();
     } catch (error) {
         console.error('Error exporting monthly report:', error);
         throw error;

@@ -20,6 +20,7 @@ export const radius = {
     xxl: 24,
     pill: 999,
     circle: 9999,
+    full: 9999,
 } as const;
 
 export const shadows = {

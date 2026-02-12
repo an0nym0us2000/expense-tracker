@@ -10,8 +10,9 @@ const CURRENCY_SYMBOLS: Record<CurrencyCode, string> = {
     AUD: 'A$',
 };
 
-export function formatCurrency(amount: number, currency: CurrencyCode = 'USD'): string {
-    const symbol = CURRENCY_SYMBOLS[currency] || '$';
+export function formatCurrency(amount: number, currency?: CurrencyCode | string): string {
+    const curr = (currency || 'USD') as CurrencyCode;
+    const symbol = CURRENCY_SYMBOLS[curr] || '$';
     const formatted = Math.abs(amount).toLocaleString('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
@@ -19,11 +20,12 @@ export function formatCurrency(amount: number, currency: CurrencyCode = 'USD'): 
     return amount < 0 ? `-${symbol}${formatted}` : `${symbol}${formatted}`;
 }
 
-export function formatCompactCurrency(amount: number, currency: CurrencyCode = 'USD'): string {
-    const symbol = CURRENCY_SYMBOLS[currency] || '$';
+export function formatCompactCurrency(amount: number, currency?: CurrencyCode | string): string {
+    const curr = (currency || 'USD') as CurrencyCode;
+    const symbol = CURRENCY_SYMBOLS[curr] || '$';
     if (amount >= 1_000_000) return `${symbol}${(amount / 1_000_000).toFixed(1)}M`;
     if (amount >= 1_000) return `${symbol}${(amount / 1_000).toFixed(1)}K`;
-    return formatCurrency(amount, currency);
+    return formatCurrency(amount, curr);
 }
 
 export function getCurrencySymbol(currency: CurrencyCode): string {

@@ -145,6 +145,7 @@ export const colors = {
     overlayLight: 'rgba(0,0,0,0.08)',
 
     // Card
+    card: palette.white,
     cardBg: palette.white,
     cardBorder: palette.gray100,
     cardShadow: 'rgba(0,0,0,0.06)',
